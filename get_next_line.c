@@ -6,22 +6,22 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/20 19:08:26 by fmoreira          #+#    #+#             */
-/*   Updated: 2021/07/22 19:52:30 by fmoreira         ###   ########.fr       */
+/*   Updated: 2021/07/26 16:25:52 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"get_next_line.h"
 
-static int	search_line_break(char **saved, size_t *scissor)
+static int	search_line_break(char **buf, size_t *scissor)
 {
 	int	i;
 
-	if (!*saved)
+	if (!*buf)
 		return (0);
 	i = 0;
-	while ((*saved)[i] != '\0')
+	while ((*buf)[i] != '\0')
 	{
-		if ((*saved)[i] == '\n')
+		if ((*buf)[i] == '\n')
 		{
 			*scissor = i;
 			return (1);
@@ -31,7 +31,7 @@ static int	search_line_break(char **saved, size_t *scissor)
 	return (0);
 }
 
-static char	*cut_line(char **saved, size_t *scissor)
+static char	*cut_line(char **buf, size_t *scissor)
 {
 	int		i;
 	char	*tmp;
@@ -39,36 +39,36 @@ static char	*cut_line(char **saved, size_t *scissor)
 
 	i = 0;
 	line = NULL;
-	if (!*saved)
+	if (!*buf)
 		return (NULL);
-	tmp = ft_strdup(*saved);
-	if (search_line_break(&*saved, &*scissor))
+	tmp = ft_strdup(*buf);
+	if (search_line_break(&*buf, &*scissor))
 	{
-		line = ft_substr(*saved, 0, *scissor + 1);
-		free(*saved);
-		*saved = ft_substr(tmp, *scissor + 1, ft_strlen(tmp));
+		line = ft_substr(*buf, 0, *scissor + 1);
+		free(*buf);
+		*buf = ft_substr(tmp, *scissor + 1, ft_strlen(tmp));
 	}
 	else
 	{
 		i = ft_strlen(tmp);
 		if (i > 0)
 			line = ft_substr(tmp, 0, i);
-		free(*saved);
-		*saved = NULL;
+		free(*buf);
+		*buf = NULL;
 	}
 	free(tmp);
 	return (line);
 }
 
-static void	save_changes(char **saved, char **tmp, char **be_read)
+static void	save_changes(char **buf, char **tmp, char **be_read)
 {
-	if (!*saved)
-		*saved = ft_strdup(*be_read);
+	if (!*buf)
+		*buf = ft_strdup(*be_read);
 	else
 	{
-		*tmp = ft_strdup(*saved);
-		free(*saved);
-		*saved = ft_strjoin(*tmp, *be_read);
+		*tmp = ft_strdup(*buf);
+		free(*buf);
+		*buf = ft_strjoin(*tmp, *be_read);
 		free(*tmp);
 	}
 }
@@ -77,7 +77,7 @@ char	*get_next_line(int fd)
 {
 	size_t		scissor;
 	size_t		read_int;
-	static char	*saved;
+	static char	*buf;
 	char		*be_read;
 	char		*tmp;
 
@@ -89,11 +89,11 @@ char	*get_next_line(int fd)
 	while (read_int > 0)
 	{
 		(be_read)[read_int] = '\0';
-		save_changes(&saved, &tmp, &be_read);
-		if (search_line_break(&saved, &scissor))
+		save_changes(&buf, &tmp, &be_read);
+		if (search_line_break(&buf, &scissor))
 			break ;
 		read_int = read(fd, be_read, BUFFER_SIZE);
 	}
 	free(be_read);
-	return (cut_line(&saved, &scissor));
+	return (cut_line(&buf, &scissor));
 }
