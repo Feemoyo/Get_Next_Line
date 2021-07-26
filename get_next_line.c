@@ -6,7 +6,7 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/20 19:08:26 by fmoreira          #+#    #+#             */
-/*   Updated: 2021/07/26 16:25:52 by fmoreira         ###   ########.fr       */
+/*   Updated: 2021/07/26 17:12:26 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	*cut_line(char **buf, size_t *scissor)
 	return (line);
 }
 
-static void	save_changes(char **buf, char **tmp, char **be_read)
+static void	set_buf(char **buf, char **tmp, char **be_read)
 {
 	if (!*buf)
 		*buf = ft_strdup(*be_read);
@@ -89,7 +89,7 @@ char	*get_next_line(int fd)
 	while (read_int > 0)
 	{
 		(be_read)[read_int] = '\0';
-		save_changes(&buf, &tmp, &be_read);
+		set_buf(&buf, &tmp, &be_read);
 		if (search_line_break(&buf, &scissor))
 			break ;
 		read_int = read(fd, be_read, BUFFER_SIZE);
