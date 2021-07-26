@@ -6,7 +6,7 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/20 21:04:56 by fmoreira          #+#    #+#             */
-/*   Updated: 2021/07/20 21:10:27 by fmoreira         ###   ########.fr       */
+/*   Updated: 2021/07/26 16:13:37 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1 || !s2)
 		return (0);
 	ns = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	i = 0;
+	j = 0;
 	if (ns)
 	{
-		i = 0;
-		j = 0;
 		while (s1[i])
 		{
 			ns[i] = s1[i];
@@ -48,6 +48,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 			j++;
 		}
 	}
+	ns[i + j] = 0;
 	return (ns);
 }
 
