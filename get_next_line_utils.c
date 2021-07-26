@@ -6,101 +6,99 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/20 21:04:56 by fmoreira          #+#    #+#             */
-/*   Updated: 2021/07/26 16:13:37 by fmoreira         ###   ########.fr       */
+/*   Updated: 2021/07/26 16:17:16 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char *str)
 {
 	size_t	i;
 
 	i = 0;
-	while (s[i])
-	{
+	while (str[i] != '\0')
 		i++;
-	}
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	size_t	i;
-	size_t	j;
-	char	*ns;
-
-	if (!s1 || !s2)
-		return (0);
-	ns = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	i = 0;
-	j = 0;
-	if (ns)
-	{
-		while (s1[i])
-		{
-			ns[i] = s1[i];
-			i++;
-		}
-		while (s2[j])
-		{
-			ns[i + j] = s2[j];
-			j++;
-		}
-	}
-	ns[i + j] = 0;
-	return (ns);
-}
-
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
+	char	*res;
+	size_t	len;
 	size_t	i;
 
-	if (!dest && !src)
-		return (0);
+	if (s1 == NULL || s2 == NULL)
+		return (NULL);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	res = malloc(len + 1);
+	if (res == NULL)
+		return (NULL);
 	i = 0;
-	while (i < n)
-	{
-		((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
-		i++;
-	}
-	return (dest);
+	while (*s1)
+		res[i++] = *s1++;
+	while (*s2)
+		res[i++] = *s2++;
+	res[i] = '\0';
+	return (res);
 }
 
 char	*ft_strdup(const char *s)
 {
-	char	*i;
+	char	*dst;
+	int		slen;
+	int		offset;
 
-	i = (char *)malloc(ft_strlen(s) + 1);
-	if (!i)
+	slen = ft_strlen(s);
+	dst = (char *)malloc((slen + 1) * sizeof(char));
+	if (!dst)
 		return (0);
-	ft_memcpy(i, s, ft_strlen(s) + 1);
-	return (i);
+	offset = 0;
+	while (offset < slen + 1)
+	{
+		((unsigned char *)dst)[offset] = ((unsigned char *)s)[offset];
+		offset++;
+	}
+	return (dst);
+}
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	char			current_char;
+	unsigned int	i;
+
+	if (src == NULL)
+		return (0);
+	if (size > 0)
+	{
+		i = 0;
+		current_char = src[i];
+		while (current_char != '\0' && i < (size - 1))
+		{
+			dst[i] = current_char;
+			i++;
+			current_char = src[i];
+		}
+		dst[i] = '\0';
+	}
+	return (ft_strlen(src));
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	i;
-	size_t	j;
-	char	*src;
+	char	*str;
+	size_t	s_len;
 
-	i = -1;
-	j = ft_strlen(s + start);
 	if (!s)
 		return (0);
 	if (ft_strlen(s) < start)
-		return (malloc(1));
-	if (j < len)
-		len = j;
-	src = malloc(len + 1);
-	if (src)
-	{
-		while (++i < len)
-		{
-			src[i] = s[start + i];
-		}
-		return (src);
-	}
-	else
+		return (calloc(1, sizeof(char)));
+	s_len = ft_strlen(s + start);
+	if ((s_len) < len)
+		len = s_len;
+	str = (char *)malloc((len + 1) * sizeof(char));
+	if (!str)
 		return (0);
+	ft_strlcpy(str, (s + start), len + 1);
+	return (str);
 }
